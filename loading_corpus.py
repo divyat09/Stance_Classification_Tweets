@@ -1,4 +1,5 @@
 import nltk
+from nltk import word_tokenize
 #from nltk.book import *
 import openpyxl
 from openpyxl import Workbook
@@ -21,10 +22,10 @@ print name
 sheet=wb.get_sheet_by_name('training_data_1.xlsx')
 
 print 'Type',
-print str(type(sheet))
+print type(sheet)
 
 print 'Title',
-print str(sheet.title)
+print sheet.title
 
 #Accessing values from cells
 cell=sheet['B3']
