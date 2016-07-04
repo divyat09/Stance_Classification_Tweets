@@ -2,7 +2,7 @@ import urllib
 import pandas as pd
 
 #data=pd.read_csv('/home/divyat/Desktop/RTE/Data/TrainingData/training_data_1.csv', delimiter="\t", quoting=3)
-data=pd.read_excel('/home/divyat/Desktop/RTE/Data/TrainingData/training_data_1.xlsx', index_col=None, na_values=['NA'] )
+data=pd.read_excel('/home/divyat/Desktop/RTE/Data/TrainingData/Training_Set.xlsx', index_col=None, na_values=['NA'] )
 
 #print all the columns
 print data.columns
@@ -29,3 +29,6 @@ print data[["Target","Tweet"]]
 #print the data type of all the columns of data
 #print data.dtype
 
+#Take a subset of data frame with column Local Target having only value Baby Rights
+data=data[data["Local Target"]=='Baby Rights']
+print data.shape
