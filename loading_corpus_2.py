@@ -22,13 +22,25 @@ print data.loc[[1,10,19]]
 #print the column Target
 print data["Target"]
 
+#print the elelment under column target of 3rd row
+print data["Target"].loc[2]
+
 #print some specific columns combined by passing a list containing name of those columns inside that list
 print data[["Target","Tweet"]]
 
+#the dataype of all the columns of data
+print data.dty
+	
+#Take a subset of datindex=index+1a frame with column Local Target having only value Baby Rights
+data1=data[data["Local Target"]=='Baby Rights']
+print data1.shape
 
-#print the data type of all the columns of data
-#print data.dtype
+#Replacing all the Nan values with None Values
+index=0
+for item in data["Local Target"].isnull():
+	if item==True:
+		data["Local Target"].loc[index]='NONE'
+	index=index+1
 
-#Take a subset of data frame with column Local Target having only value Baby Rights
-data=data[data["Local Target"]=='Baby Rights']
-print data.shape
+#You can even directly use this function instead of your own code to replace all the Nan values
+data["Local Target"].fillna('NONE')
