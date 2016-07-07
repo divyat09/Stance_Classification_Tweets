@@ -29,7 +29,7 @@ print data["Target"].loc[2]
 print data[["Target","Tweet"]]
 
 #the dataype of all the columns of data
-print data.dty
+#print data.dty
 	
 #Take a subset of datindex=index+1a frame with column Local Target having only value Baby Rights
 data1=data[data["Local Target"]=='Baby Rights']
@@ -44,3 +44,15 @@ for item in data["Local Target"].isnull():
 
 #You can even directly use this function instead of your own code to replace all the Nan values
 data["Local Target"].fillna('NONE')
+
+#Writing data from a pandas data frame to xlsx file
+
+# Create a Pandas Excel writer using XlsxWriter as the engine.
+writer = pd.ExcelWriter('/home/divyat/Desktop/RTE/Data/TrainingData/Training_Set_New.xlsx', engine='xlsxwriter')
+# Convert the dataframe to an XlsxWriter Excel object.
+data.to_excel(writer, sheet_name='Sheet1')
+# Close the Pandas Excel writer and output the Excel file.
+writer.save()
+workbook =writer.book
+worksheet =writer.sheets['Sheet1']
+
