@@ -15,7 +15,7 @@ def make_matrix(tweets, features):
     row=[]
     for tweet in tweets:
         for feature in features:
-        	#Each element of row is count of feaure in tweet
+        	#Each element of row is count of feature in tweet
         	row.append(tweet.count(feature))	
         matrix.append(row)
         row=[]
@@ -54,18 +54,16 @@ def Features(target):
 	feature=[]
 	for item in feature_set:
 		feature.append(item)
-	print len(feature)
 	f.close()
 
 	return feature
 
-def Analysis(clf,matrix,label,target,values):
+def Analysis(clf,matrix,label,target,Classes):
 	
 	index=0
 	error=0
-	count=0
-	new_count=0
 	for item in clf.predict(matrix):
+		#If item in predicted label set is not same as the item in label set at the same index
 		if item!=label[index]:
 			error=error+1
 		index=index+1
@@ -73,18 +71,13 @@ def Analysis(clf,matrix,label,target,values):
 	f=open('/home/divyat/Desktop/RTE/Data/TrainingData/Analysis.txt','a')
 
 	f.write('Analysis for '+target+'\n'+'\n')
-	for item in values:
-		for t in label:
-			if t==item:
-				count=count+1
-		for t in clf.predict(matrix):
-			if t==item:
-				new_count=new_count+1
-		f.write('Old Count of'+item+': '+str(count)+'\n')
-		f.write('New Count of'+item+': '+str(count)+'\n'+'\n')
-		count=0
-		new_count=0
-
+	#Calculate the count of each class
+	for Class in Classes:
+		#It counts the no of times item appears in the label set
+		f.write('Old Count of'+Class+':  '+str(label.count(Class))+'\n')
+		#It counts the no of times item appears in the predicted label set
+		f.write('New Count of'+Class+':  '+str(clf.predict(matrix).tolist().count(Class))+'\n'+'\n')
+		
 	f.write('Total Wrong Cases: '+ str(error)+"\n")
 	f.write('Accuracy: '+ str(clf.score(matrix,label,sample_weight=None)) +'\n'+'\n')
 	f.close()
@@ -94,15 +87,12 @@ def train_svm_stance(target,sec_target):
 	#If No element in data frame with specified secondary target
 	if not target in sec_target:
 		return 0
-	
+	#Taking data specific to the target
 	sub_data=data[target==sec_target]
-
 	#Making list of all tweets 
 	sub_tweets=Tweets(sub_data)
-
 	#Feature Set made by selecting words with high pmi from all the words form tweets
 	sub_features =Features(target)
-	
 	#Convert the tweets into feature vectors and make a matrix of feature vectors
 	sub_matrix=make_matrix(sub_tweets,sub_features)
 	
@@ -112,11 +102,11 @@ def train_svm_stance(target,sec_target):
 	#Implementing the Support Vector Machine
 	clf = svm.SVC(kernel='linear')
 	print clf
-	
+	#Train the SVM on training data using the sub_label
 	clf.fit(sub_matrix, sub_label) 
-	
+
 	#Analysis on Trained SVM
-	Analysis(clf,sub_matrix,sub_label,target,['FAVOR','AGAINST','NONE'])
+	#Analysis(clf,sub_matrix,sub_label,target,['FAVOR','AGAINST','NONE'])
 
 	return clf
 
@@ -141,18 +131,19 @@ def train_svm(tweets,features):
 
 	meta = numpy.asarray(columns)
 	'''
-
 	#Convert the tweets into feature vectors and make a matrix of feature vectors
 	matrix=make_matrix(tweets,features)
-
 	#Mark the classes of training set tweets for training the SVM
 	label=Label(data,'Local Target')
 	
 	#Implementing the Support Vector Machine
 	clf = svm.SVC(kernel='linear')
 	print clf
+	#Train the classfier for predicitng the secondary targets using the labelled secondary targets in label list
 	clf.fit(matrix, label)
 
+	#Analysis on Trained SVM for secondary target classification
+ 	#Analysis(clf,matrix,label,'Secondary Targets',['Baby Rights','Women Rights','Christianity','Adoption','Abortion','Other'])
 	
 	#Train the Stance Classifier for each of the subsets we have made using Secondary Targets 
 	clf1=train_svm_stance('Baby Rights',clf.predict(matrix))
@@ -161,7 +152,7 @@ def train_svm(tweets,features):
 	clf4=train_svm_stance('Adoption',clf.predict(matrix))
 	clf5=train_svm_stance('Abortion',clf.predict(matrix))
 	clf6=train_svm_stance('Other',clf.predict(matrix))
-
+	#Making a list of all classifiers to use for predicting over test data
 	classifiers =[]
 	classifiers.append(clf)
 	classifiers.append(clf1)
@@ -170,24 +161,22 @@ def train_svm(tweets,features):
 	classifiers.append(clf4)
 	classifiers.append(clf5)
 	classifiers.append(clf6)
-	
+
+	#Check if a classifier is not eympty or we had no data available in trainnig set for that particular secondary target
 	for item in classifiers:
 		if item==0:
 			classifiers.remove(item)
-
-	#Analysis on Trained SVM
-	Analysis(clf,matrix,label,'Secondary Targets',['Baby Rights','Women Rights','Christianity','Adoption','Abortion','Other'])
 	
 	return classifiers
 
 #Main Code Starts Here
 
+#Reading the data into data frame objects from excel sheets 
 data=pd.read_excel('/home/divyat/Desktop/RTE/Data/TrainingData/Training_Set_New.xlsx', index_col=None, na_values=['NA'] )
 data_test=pd.read_excel('/home/divyat/Desktop/RTE/Data/TestData/test_data.xlsx', index_col=None, na_values=['NA'] )
 
 #Making list of all tweets 
 tweets=Tweets(data)
-
 #Feature Set made by selecting words with high pmi from all the words form tweets
 features = Features('features')
 
@@ -196,37 +185,35 @@ classifiers=train_svm(tweets, features)
 
 #Making list of all tweets in test set
 test_tweets=Tweets(data_test)
-
 #Convert the tweets into feature vectors and make a matrix of feature vectors which  serve as an input to classifier trained on Training Data
 matrix=make_matrix(test_tweets,features)
 
 #Predicting Stance for the Test Data 
 stance_predicted=[]
-list_target=['Baby Rights','Women Rights','Christianitydsadasdasd','Adoption','Abortion','Other']
+list_target=['Baby Rights','Women Rights','Christianity','Adoption','Abortion','Other']
 
 #Secondary Target Classification of Test Tweets
 target_predicted=classifiers[0].predict(matrix)
-
+#Check if a particular secondary target occurs in list of secondary targets predicted for the training data
 for item in list_target:
 	if not item in target_predicted:
 		list_target.remove(item)
 
+#Predicting Stance for test Set by looping over the list of secondary targets in the predicted secondary target list 
 for i in range(0,len(classifiers)-1):
+
 	#Making new data test specific to a secondary target
 	new_data=data_test[list_target[i]==target_predicted]
-	
 	#Making list of all tweets specific to a secondary category
 	new_tweets=Tweets(new_data)
-	
 	#Making list of features specific to a secondary category
 	new_features=Features(list_target[i])
-
 	#Making matrix specific to a secondary target
 	new_matrix=make_matrix(new_tweets,new_features)
 	
 	stance_predicted=stance_predicted + classifiers[i+1].predict(new_matrix).tolist()
 
-#Adding the prediced data to the Test Set
+#Adding the secondary targets and stance prediced to the Test Set
 data_test['Target_Predicted'] = pd.Series(target_predicted, index=data_test.index)
 data_test['Stance_Predicted'] = pd.Series(np.asarray(stance_predicted), index=data_test.index)
 
