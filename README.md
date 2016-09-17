@@ -1,8 +1,4 @@
----
-title: View-based Adaptive Streaming
-layout: post
-excerpt_separator: <!--more-->
----
+
 **Divyat Mahajan**  
 **3rd Year Undergraduate Student**  
 **Department of** **Mathematics and Statistics**  
