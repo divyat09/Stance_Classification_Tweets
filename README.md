@@ -3,7 +3,7 @@
 **3rd Year Undergraduate Student**  
 **Department of** **Mathematics and Statistics**  
 **Indian Institute of Technology Kanpur**  
-**Email: [divyatm@iitk.ac.in](mailto:divyatm@iitk.ac.in) Homepage: [Click here](http://home.iitk.ac.in/~divyatm)**
+**Email: [divyatmahajan@gmail.com](divyatmahajan@gmail.com) Homepage: [Click here](http://home.iitk.ac.in/~divyatm)**
 
 <!--more-->
 <hr>
@@ -43,26 +43,6 @@ A lot of work can be done in automating the procedure for generating and annotat
 
 [Click here](http://home.iitk.ac.in/~divyatm/RTE_Report.pdf)
 
-##### RTE Day Presentation
-
-[Clickhere](http://home.iitk.ac.in/~divyatm/RTE.pptx)
-
 ##### Results and Accuracy of SVM Classifiers:
 
 [Click here](https://docs.google.com/document/d/1KbAxn9uipJcs8SKqeDPZ37B2pT6QDru89Sz1wncNxng/view?usp=sharing)
-
-##### Code for the Project:
-
-[Click here](https://github.com/divyat09/NLP/tree/Project)
-
-##### Software/Libraries used:
-
-Pandas, sklearn, nltk
-
-##### Languages Used:
-
-Python
-
-##### Version Control System:
-
-Git
