@@ -41,7 +41,7 @@ A lot of work can be done in automating the procedure for generating and annotat
 
 ##### Project Report:
 
-[Click here](http://home.iitk.ac.in/~divyatm/RTE_Report.pdf)
+[Click here](https://github.com/divyat09/divyat09.github.io/blob/master/RTE_Report.pdf)
 
 ##### Results and Accuracy of SVM Classifiers:
 
